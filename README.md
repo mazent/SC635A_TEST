@@ -2,7 +2,7 @@
 
 programma per la validazione delle schede
 
-Contiene sottoprogetti, usare: git clone --recursive 
+Contiene sottoprogetti, usare: git clone --recursive o git submodule update --init --recursive
 
 Per aggiornare bsp:
 1. cd bsp
