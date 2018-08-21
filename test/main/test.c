@@ -39,8 +39,32 @@ static osMessageQId comes = NULL ;
 #define MSG_TASTO		0x90B56557
 #define MSG_CAVO		0xCA8AB86D
 #define MSG_RIDE		0xA74C0DE7
+#define MSG_ARIMB		0x5876FD23
 
 int cntTst = 0 ;
+
+#define ANTIRIMBALZO	50
+
+static void antirimb(void * v)
+{
+	UNUSED(v) ;
+
+	CHECK_IT(osOK == osMessagePut(comes, MSG_ARIMB, 0)) ;
+}
+
+osTimerDef(timArimb, antirimb) ;
+static osTimerId timArimb = NULL ;
+
+static void lamp(void * v)
+{
+	UNUSED(v) ;
+
+	LED_rosso_alt() ;
+}
+
+osTimerDef(timLamp, lamp) ;
+static osTimerId timLamp = NULL ;
+
 
 static void tasto(void)
 {
@@ -223,6 +247,12 @@ void app_main()
 
     ESP_ERROR_CHECK(esp_event_loop_init(event_handler, NULL));
 
+    timArimb = osTimerCreate(osTimer(timArimb), osTimerOnce, NULL) ;
+    assert(timArimb) ;
+
+    timLamp = osTimerCreate(osTimer(timArimb), osTimerPeriodic, NULL) ;
+    assert(timLamp) ;
+
     // Scheda
     CHECK_IT( TST_beg(tasto) ) ;
     CHECK_IT( CRJ_beg(cavo) ) ;
@@ -254,6 +284,8 @@ void app_main()
 #endif
 	ESP_LOGI(TAG, "data %s", DATA) ;
 
+	CHECK_IT(osOK == osTimerStart(timLamp, 500)) ;
+
 	// Eseguo i comandi
 	while (true) {
 		osEvent event = osMessageGet(comes, osWaitForever) ;
@@ -265,6 +297,13 @@ void app_main()
 				++cntTst ;
 				break ;
 			case MSG_CAVO:
+				CHECK_IT(osOK == osTimerStart(timArimb, ANTIRIMBALZO)) ;
+				break ;
+			case MSG_ARIMB:
+				if (CRJ_in())
+					ESP_LOGI(TAG, "cavo RJ inserito") ;
+				else
+					ESP_LOGI(TAG, "cavo RJ estratto") ;
 				break ;
 			case MSG_RIDE:
 				break ;
