@@ -1,6 +1,7 @@
 bsp
 app_trace
 app_update
+asio
 aws_iot
 bootloader_support
 bt
@@ -11,6 +12,7 @@ driver
 esp32
 esp_adc_cal
 esp_http_client
+esp_https_ota
 esp-tls
 esptool_py
 ethernet
@@ -18,6 +20,7 @@ expat
 fatfs
 freertos
 heap
+http_server
 idf_test
 include
 jsmn

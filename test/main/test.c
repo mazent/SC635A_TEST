@@ -280,6 +280,7 @@ void app_main()
 			switch (event.value.v) {
 			case MSG_TASTO:
 				++cntTst ;
+				ESP_LOGI(TAG, "tasto premuto") ;
 				break ;
 			case MSG_CAVO:
 				CHECK_IT(osOK == osTimerStart(timArimb, ANTIRIMBALZO)) ;
@@ -291,6 +292,7 @@ void app_main()
 					ESP_LOGI(TAG, "cavo RJ estratto") ;
 				break ;
 			case MSG_RIDE:
+				ESP_LOGI(TAG, "fine rilevazione diagnosi") ;
 				break ;
 			default: {
 					// Comando
