@@ -55,16 +55,6 @@ static void antirimb(void * v)
 osTimerDef(timArimb, antirimb) ;
 static osTimerId timArimb = NULL ;
 
-static void lamp(void * v)
-{
-	UNUSED(v) ;
-
-	LED_rosso_alt() ;
-}
-
-osTimerDef(timLamp, lamp) ;
-static osTimerId timLamp = NULL ;
-
 
 static void tasto(void)
 {
@@ -250,9 +240,6 @@ void app_main()
     timArimb = osTimerCreate(osTimer(timArimb), osTimerOnce, NULL) ;
     assert(timArimb) ;
 
-    timLamp = osTimerCreate(osTimer(timArimb), osTimerPeriodic, NULL) ;
-    assert(timLamp) ;
-
     // Scheda
     CHECK_IT( TST_beg(tasto) ) ;
     CHECK_IT( CRJ_beg(cavo) ) ;
@@ -283,8 +270,6 @@ void app_main()
 	ESP_LOGI(TAG, "vers %d (dbg)", VER) ;
 #endif
 	ESP_LOGI(TAG, "data %s", DATA) ;
-
-	CHECK_IT(osOK == osTimerStart(timLamp, 500)) ;
 
 	// Eseguo i comandi
 	while (true) {
